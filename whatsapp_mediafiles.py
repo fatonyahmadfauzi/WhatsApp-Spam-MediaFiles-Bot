@@ -9,175 +9,128 @@ from webdriver_manager.chrome import ChromeDriverManager
 from datetime import datetime
 
 def send_file_via_whatsapp(driver, file_path, count=None, total=None, bot_prompt='N', upload_delay=3):
-    """Send file through WhatsApp Web with current interface"""
+    """Send file through WhatsApp Web"""
     try:
-        # Wait for attachment button to be clickable (new WhatsApp interface)
+        # Wait for attachment button
         attachment_btn = WebDriverWait(driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, '//button[@title="Attach"]'))
         )
         attachment_btn.click()
         time.sleep(1)
         
-        # Find the document input (hidden file input)
+        # Find file input
         document_input = WebDriverWait(driver, 15).until(
             EC.presence_of_element_located((By.XPATH, '//input[@accept="*"]'))
         )
         
-        # Send the absolute file path
-        abs_path = os.path.abspath(file_path)
-        document_input.send_keys(abs_path)
+        # Send file path
+        document_input.send_keys(os.path.abspath(file_path))
         
-        # Wait for upload
+        # Upload progress
         print("🔼 Uploading", end='', flush=True)
         for _ in range(int(upload_delay)):
             print('.', end='', flush=True)
             time.sleep(1)
         print()
         
-        # Wait for send button (new WhatsApp interface)
+        # Send file
         send_btn = WebDriverWait(driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, '//span[@data-icon="send"]'))
         )
         send_btn.click()
         
         return True
-    
     except Exception as e:
-        print(f"\n❌ Failed to send file: {str(e)[:100]}...")
+        print(f"\n❌ Gagal mengirim {os.path.basename(file_path)}: {str(e)[:100]}...")
         return False
 
 def main():
-    # Setup Chrome options
+    # Setup Chrome
     options = webdriver.ChromeOptions()
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
     
-    # For debugging (remove in production)
-    # options.add_argument('--auto-open-devtools-for-tabs')
-    # options.add_experimental_option("detach", True)
-
     try:
-        # Setup Chrome WebDriver
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.maximize_window()
 
-        # Open WhatsApp Web
+        # Buka WhatsApp Web
         driver.get('https://web.whatsapp.com/')
-        print("\n\nPlease scan the QR code within 60 seconds...")
+        print("\nSilakan scan QR code... (Timeout 60 detik)")
         
-        # Wait for QR code scan (check for side panel)
-        try:
-            WebDriverWait(driver, 60).until(
-                EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Chat list"]'))
-            )
-            print("✅ QR code scanned successfully")
-        except:
-            print("❌ QR code not scanned in time")
-            driver.quit()
-            return
+        # Tunggu sampai login
+        WebDriverWait(driver, 60).until(
+            EC.presence_of_element_located((By.XPATH, '//div[@aria-label="Chat list"]'))
+        )
 
-        # Get user input
-        name = input('Enter the name of user or group: ')
-        file_path = input('Drag file here or type path: ').strip('"\'')
-        if not os.path.exists(file_path):
-            print("❌ File not found!")
-            driver.quit()
-            return
+        # Input penerima
+        name = input('Nama kontak/grup: ')
+        user = WebDriverWait(driver, 15).until(
+            EC.element_to_be_clickable((By.XPATH, f'//span[@title="{name}"]'))
+        )
+        user.click()
+        time.sleep(3)
 
-        count = int(input('Enter how many times to send the file: '))
-        gap = float(input('Interval (in seconds) between sends: '))
-        upload_delay = float(input('Upload delay (in seconds): '))
-        bot_prompt = input('Add bot prompt? (Y/N): ').strip().upper()
-
-        # Find and click chat with retries
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                user = WebDriverWait(driver, 15).until(
-                    EC.element_to_be_clickable((By.XPATH, f'//span[@title="{name}"]'))
-                )
-                user.click()
-                print("✅ Chat selected successfully")
-                time.sleep(3)  # Wait for chat to load
+        # Input file-file
+        files = []
+        print("\nMasukkan path file (ketik 'selesai' jika sudah):")
+        while True:
+            file_path = input(f"File {len(files)+1}: ").strip('"\'')
+            if file_path.lower() == 'selesai':
+                if not files:
+                    print("⚠️ Minimal 1 file diperlukan!")
+                    continue
                 break
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    print(f"[!] Could not find chat '{name}' after {max_retries} attempts. Error: {e}")
-                    driver.quit()
-                    return
-                print(f"⚠️ Retrying chat selection ({attempt + 1}/{max_retries})...")
-                time.sleep(2)
+            if not os.path.exists(file_path):
+                print("❌ File tidak ditemukan!")
+                continue
+            files.append(file_path)
 
-        # Send files with better error handling
+        # Konfigurasi
+        count = int(input('Jumlah pengulangan: '))
+        gap = float(input('Interval antar pengiriman (detik): '))
+        upload_delay = float(input('Waktu upload (detik): '))
+        bot_prompt = input('Tambahkan status bot? (Y/N): ').strip().upper()
+
+        # Proses pengiriman
         success_count = 0
         for i in range(1, count + 1):
-            print(f"\n♻️ Attempt {i}/{count}")
+            print(f"\n📦 Siklus {i}/{count}")
             
-            try:
-                # Send status message if bot prompt enabled
+            for file_path in files:
+                print(f"\n📄 Mengirim {os.path.basename(file_path)}...")
+                
                 if bot_prompt == 'Y':
-                    msg_box = WebDriverWait(driver, 15).until(
-                        EC.element_to_be_clickable((By.XPATH, '//div[@role="textbox" and @contenteditable="true"]'))
+                    msg_box = WebDriverWait(driver, 10).until(
+                        EC.element_to_be_clickable((By.XPATH, '//div[@role="textbox"]'))
                     )
                     timestamp = datetime.now().strftime("%H:%M:%S")
-                    status_msg = f"[{timestamp} | {i}/{count}] "
-                    
-                    # Clear and send status message
-                    msg_box.click()
-                    driver.execute_script("arguments[0].innerHTML = '';", msg_box)
-                    msg_box.send_keys(status_msg)
-                    
-                    # Send the status message
-                    send_btn = WebDriverWait(driver, 5).until(
-                        EC.element_to_be_clickable((By.XPATH, '//span[@data-icon="send"]'))
-                    )
-                    send_btn.click()
+                    msg_box.send_keys(f"[{timestamp} | File {files.index(file_path)+1}/{len(files)}] ")
+                    driver.find_element(By.XPATH, '//span[@data-icon="send"]').click()
                     time.sleep(1)
                 
-                # Send the file
                 if send_file_via_whatsapp(driver, file_path, i, count, bot_prompt, upload_delay):
                     success_count += 1
-                    print(f"✅ Success (Total: {success_count})")
-                else:
-                    print("❌ Failed - retrying chat selection")
-                    # Try re-selecting chat
-                    driver.find_element(By.XPATH, f'//span[@title="{name}"]').click()
-                    time.sleep(3)
                 
-                # Wait between sends if not last iteration
-                if i < count:
-                    print(f"⏳ Waiting {gap} seconds...")
+                if file_path != files[-1]:  # Jangan tunggu setelah file terakhir
                     time.sleep(gap)
-                    
-            except KeyboardInterrupt:
-                print("\n⏹️ Stopped by user")
-                break
-            except Exception as e:
-                print(f"⚠️ Unexpected error: {str(e)[:100]}...")
-                # Try refreshing the chat
-                driver.find_element(By.XPATH, f'//span[@title="{name}"]').click()
-                time.sleep(3)
+            
+            if i < count:
+                print(f"\n⏳ Menunggu {gap} detik...")
+                time.sleep(gap)
 
-        # Final message if any files were sent
-        if bot_prompt == 'Y' and success_count > 0:
-            try:
-                msg_box = WebDriverWait(driver, 10).until(
-                    EC.element_to_be_clickable((By.XPATH, '//div[@role="textbox" and @contenteditable="true"]'))
-                )
-                msg_box.send_keys(f"✅ Sent {success_count}/{count} files")
-                driver.find_element(By.XPATH, '//span[@data-icon="send"]').click()
-            except Exception as e:
-                print(f"⚠️ Couldn't send final message: {e}")
+        # Pesan akhir
+        if bot_prompt == 'Y':
+            msg_box = driver.find_element(By.XPATH, '//div[@role="textbox"]')
+            msg_box.send_keys(f"✅ {success_count}/{len(files)*count} file terkirim")
+            driver.find_element(By.XPATH, '//span[@data-icon="send"]').click()
 
-        print(f"\n📊 Final result: {success_count}/{count} files sent")
+        print(f"\n✅ Selesai! Total file terkirim: {success_count}/{len(files)*count}")
         
     finally:
-        # Ensure browser closes even if error occurs
-        if 'driver' in locals():
-            print("Closing browser in 10 seconds...")
-            time.sleep(10)
-            driver.quit()
+        print("\nMenutup browser dalam 10 detik...")
+        time.sleep(10)
+        driver.quit()
 
 if __name__ == "__main__":
     main()

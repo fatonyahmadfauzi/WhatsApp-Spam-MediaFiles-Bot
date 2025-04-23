@@ -1,15 +1,22 @@
 # Release Notes
 
-## v1.0.0 - Initial Release (2025-04-21)
+## v1.1.0 - Multi-File Support (2025-04-24)
 
-### Features
+### Added
 
-- Initial implementation of WhatsApp file sender
-- Support for multiple file sends with delays
-- Bot status message functionality
-- QR code auto-detection
+- Multiple file input (type "selesai" to finish)
+- Individual file progress tracking
+- Enhanced status messages with file counters
+- Input validation for file existence
 
-### Known Issues
+### Changed
 
-- May fail if WhatsApp Web interface changes
-- Large files may require longer upload delays
+- Improved user interface with step-by-step prompts
+- Increased default upload delay to 3 seconds
+- Better error handling for file operations
+
+### Fixed
+
+- Chrome driver compatibility issues
+- Message box clearing before status updates
+- QR code detection reliability

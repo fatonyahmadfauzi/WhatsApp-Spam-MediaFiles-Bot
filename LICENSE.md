@@ -9,28 +9,38 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-1. **Legal Compliance**: The Software shall be used in compliance with all applicable laws, including but not limited to WhatsApp's Terms of Service and Acceptable Use Policy. Any use that violates WhatsApp's terms is strictly prohibited.
+## Special Provisions for WhatsApp Automation
 
-2. **No Warranty**: The Software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement.
+1. **Compliance Clause**: Users must comply with:
 
-3. **Limitation of Liability**: In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the Software or the use or other dealings in the Software.
+   - WhatsApp's [Terms of Service](https://www.whatsapp.com/legal/)
+   - [Acceptable Use Policy](https://www.whatsapp.com/legal/acceptable-use)
+   - All applicable data protection laws
 
-4. **Ethical Use**:
+2. **Usage Restrictions**:
 
-   - This tool is intended for educational and legitimate automation purposes only
-   - Must not be used for spamming, harassment, or any malicious activities
-   - Users are solely responsible for how they use this software
+   - Maximum 10 messages/minute automated sending
+   - No bulk/spam messaging
+   - No unauthorized commercial use
 
-5. **Third-Party Services**: This software interacts with WhatsApp Web, which is a service owned by Meta Platforms, Inc. This license does not grant any rights to use WhatsApp's intellectual property.
+3. **Liability**:
 
-## Additional Terms
+   - Developer not responsible for account bans
+   - User assumes all risk of using automation tools
+   - WhatsApp is a trademark of Meta Platforms, Inc.
 
-- You may modify and redistribute the code, but must include this original license
-- Commercial use is permitted provided it complies with all terms
-- Any forks or derivatives must maintain this license and disclaimer
+4. **Ethical Requirements**:
+   - Must obtain recipient consent before sending
+   - Include opt-out instructions in messages
+   - Respect contact frequency preferences
 
-## Disclaimer of Affiliation
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-This project is not affiliated with, maintained by, or endorsed by WhatsApp Inc. or Meta Platforms, Inc.
-
-By using this software, you acknowledge that you have read this license, understand it, and agree to be bound by its terms and conditions.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
