@@ -26,7 +26,7 @@
 ```bash
 git clone -b multi-file --single-branch https://github.com/fatonyahmadfauzi/WhatsApp-Spam-MediaFiles-Bot.git WhatsApp-Spam-MediaFiles-Bot_Multi-MediaFiles
 
-cd wWhatsApp-Spam-MediaFiles-Bot_Multi-MediaFiles
+cd WhatsApp-Spam-MediaFiles-Bot_Multi-MediaFiles
 ```
 
 2. Install dependencies:
