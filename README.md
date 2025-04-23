@@ -21,8 +21,9 @@ A Selenium-based automation tool to send files repeatedly through WhatsApp Web w
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/whatsapp-file-sender.git
-cd whatsapp-file-sender
+git clone -b single-file --single-branch https://github.com/fatonyahmadfauzi/WhatsApp-Spam-MediaFiles-Bot.git WhatsApp-Spam-MediaFiles-Bot_Single-MediaFiles
+
+cd WhatsApp-Spam-MediaFiles-Bot_Single-MediaFiles
 ```
 
 2. Install dependencies:
@@ -36,7 +37,7 @@ pip install -r requirements.txt
 1. Run the script:
 
 ```bash
-python whatsapp_file_sender.py
+python whatsapp_mediafiles.py
 ```
 
 2. Follow the on-screen instructions:
