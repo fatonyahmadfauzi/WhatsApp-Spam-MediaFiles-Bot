@@ -24,8 +24,9 @@
 1. Clone repository:
 
 ```bash
-git clone https://github.com/yourusername/whatsapp-file-sender.git
-cd whatsapp-file-sender
+git clone -b multi-file --single-branch https://github.com/fatonyahmadfauzi/WhatsApp-Spam-MediaFiles-Bot.git WhatsApp-Spam-MediaFiles-Bot_Multi-MediaFiles
+
+cd wWhatsApp-Spam-MediaFiles-Bot_Multi-MediaFiles
 ```
 
 2. Install dependencies:
@@ -37,7 +38,7 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-python whatsapp_file_sender.py
+python whatsapp_mediafiles.py
 ```
 
 Follow the interactive prompts:
